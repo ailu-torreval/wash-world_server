@@ -3,16 +3,16 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
+  Put,
 } from '@nestjs/common';
 import { ClientService } from './client.service';
 import { ClientDto } from './dto/client.dto';
 
 @Controller('client')
 export class ClientController {
-  constructor(private readonly clientService: ClientService) {}
+  constructor(private clientService: ClientService) {}
 
   @Post()
   create(@Body() clientDto: ClientDto) {
@@ -29,7 +29,7 @@ export class ClientController {
     return this.clientService.findOne(+id);
   }
 
-  @Patch(':id')
+  @Put(':id')
   update(@Param('id') id: string, @Body() clientDto: ClientDto) {
     return this.clientService.update(+id, clientDto);
   }

@@ -3,9 +3,9 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
+  Put,
 } from '@nestjs/common';
 import { ExtraService } from './extra.service';
 import { ExtraDto } from './dto/extra.dto';
@@ -29,7 +29,7 @@ export class ExtraController {
     return this.extraService.findOne(+id);
   }
 
-  @Patch(':id')
+  @Put(':id')
   update(@Param('id') id: string, @Body() extraDto: ExtraDto) {
     return this.extraService.update(+id, extraDto);
   }

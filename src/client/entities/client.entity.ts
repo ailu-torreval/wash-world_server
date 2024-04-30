@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { Role } from './role';
 import { Invoice } from 'src/invoice/entities/invoice.entity';
+import { Car } from 'src/car/entities/car.entity';
 
 @Entity()
 export class Client {
@@ -18,12 +19,12 @@ export class Client {
 
   @Column()
   email: string;
-  
-  @Column()
+
+  @Column({default: 0})
   reward_points_balance: number;
-  
-    @Column()
-    license_plate: string;
+
+  @Column()
+  license_plate: string;
 
   @Column({
     type: 'enum',
@@ -32,9 +33,9 @@ export class Client {
   })
   role: Role;
 
-  @OneToMany(()=> Invoice, (invoice)=> invoice.client)
-  invoices: Invoice[]
+  @OneToMany(() => Invoice, (invoice) => invoice.client)
+  invoices: Invoice[];
 
-//   @OneToMany(()=> Car, (car)=> car.user)
-//   cars: Car[]
+  // @OneToMany(()=> Car, (car)=> car.client)
+  // cars: Car[]
 }

@@ -8,6 +8,10 @@ export class ClientDto {
     @IsNotEmpty()
     @IsString()
     firstname: string;
+    
+    @IsNotEmpty()
+    @IsString()
+    email: string;
   
     @IsNotEmpty()
     @IsString()

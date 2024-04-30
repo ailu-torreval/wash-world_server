@@ -1,34 +1,31 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Request, Patch, Param, Delete, HttpCode, HttpStatus, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { LoginUserDto } from './dto/loginUser.dto';
+import { AuthGuard } from './auth.guard';
+import { ClientDto } from 'src/client/dto/client.dto';
+import { Client } from 'src/client/entities/client.entity';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post()
-  create(@Body() createAuthDto: CreateAuthDto) {
-    return this.authService.create(createAuthDto);
+
+  @HttpCode(HttpStatus.OK)
+  @Post('login')
+  login(@Body() signInDto: LoginUserDto) {
+    return this.authService.login(signInDto);
   }
 
-  @Get()
-  findAll() {
-    return this.authService.findAll();
+  @UseGuards(AuthGuard)
+  @Get('profile')
+  getProfile(@Request() req): Partial<Client> {
+    const { password, ...result } = req.user;
+    return result;
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.authService.findOne(+id);
+  @Post('signup')
+  signup(@Body() signupDto: ClientDto) {
+    return this.authService.signup(signupDto);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAuthDto: UpdateAuthDto) {
-    return this.authService.update(+id, updateAuthDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.authService.remove(+id);
-  }
 }
