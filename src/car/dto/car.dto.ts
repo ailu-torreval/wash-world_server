@@ -1,4 +1,5 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsObject, IsString } from 'class-validator';
+import { Client } from 'src/client/entities/client.entity';
 
 export class CarDto {
   @IsNotEmpty()
@@ -6,6 +7,5 @@ export class CarDto {
   license_plate: string;
 
   @IsNotEmpty()
-  @IsNumber()
-  client_id: number;
+  client: Client;
 }

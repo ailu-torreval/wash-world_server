@@ -3,22 +3,32 @@ import { ClientDto } from './dto/client.dto';
 import { Client } from './entities/client.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CarService } from 'src/car/car.service';
 
 @Injectable()
 export class ClientService {
-
   constructor(
     @InjectRepository(Client)
     private clientRepository: Repository<Client>,
+    private carService: CarService,
   ) {}
   async create(clientDto: ClientDto): Promise<any> {
-    const createdUser = await this.clientRepository.create(clientDto);
+    const { license_plate, ...rest } = clientDto;
+    const createdUser = await this.clientRepository.create(rest);
+    const createdCar = await this.carService.create({
+      license_plate,
+      client: createdUser,
+    });
     return this.clientRepository.save(createdUser);
   }
 
   async findAll(): Promise<Client[]> {
-    const clients = await this.clientRepository.find();
-    return clients;
+    try {
+      const clients = await this.clientRepository.find({ relations: ['cars'] });
+      return clients;
+    } catch (error) {
+      throw new Error('Error fetching clients');
+    }
   }
 
   async findOne(id: number): Promise<any> {
@@ -34,15 +44,26 @@ export class ClientService {
     const selectedUser = await this.clientRepository.findOne({
       where: { email },
     });
-    if(selectedUser) {
-      return selectedUser
+    if (selectedUser) {
+      return selectedUser;
     } else {
-      throw new Error
+      throw new Error();
     }
   }
 
-  async update(id: number, clientDto: ClientDto) {
-    return `This action updates a #${id} client`;
+  async update(id: number, clientDto: ClientDto): Promise<Client> {
+    try {
+      const { license_plate, ...rest } = clientDto;
+      const updatedUser = await this.clientRepository.update(id, rest);
+      if (updatedUser.affected === 1) {
+        return this.clientRepository.findOne({
+          where: { id },
+          relations: ['cars'],
+        });
+      }
+    } catch (error) {
+      throw new NotFoundException(`Client with id ${id} not found`);
+    }
   }
 
   async remove(id: number) {
@@ -52,6 +73,5 @@ export class ClientService {
     } else {
       throw new NotFoundException(`Client with id ${id} not found`);
     }
-    return {"id": id, "status": "deleted"}; 
   }
 }

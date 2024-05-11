@@ -32,4 +32,14 @@ export class Invoice {
 
     @Column()
     points_redeemed: number;
+
+    constructor(client: Client, venue: Venue, extras: Extra[], date: Date, total_amount: number, points_earned: number, points_redeemed: number) {
+        this.client = client;
+        this.venue = venue;
+        this.extras = extras;
+        this.date = date;
+        this.total_amount = total_amount;
+        this.points_earned = points_earned;
+        this.points_redeemed = points_redeemed;
+    }
 }

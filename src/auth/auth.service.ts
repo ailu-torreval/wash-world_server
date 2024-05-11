@@ -27,16 +27,20 @@ export class AuthService {
   }
 
   async signup(signupDto: ClientDto): Promise<Client> {
-
-    const salt = await bcrypt.genSalt(10);
-    const hash = await bcrypt.hash(signupDto.password, salt);
-
-    signupDto.password = hash;
-
-    const newUser = await this.clientService.create(signupDto);
-
-    const { password, ...result } = newUser;
-
-    return result;
+    try {
+      const salt = await bcrypt.genSalt(10);
+      const hash = await bcrypt.hash(signupDto.password, salt);
+  
+      signupDto.password = hash;
+  
+      const newUser = await this.clientService.create(signupDto);
+  
+      const { password, ...result } = newUser;
+  
+      return result;
+      
+    } catch(error) {
+      throw new UnauthorizedException('Invalid email or password');
+    }
   }
 }

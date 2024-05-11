@@ -23,9 +23,6 @@ export class Client {
   @Column({default: 0})
   reward_points_balance: number;
 
-  @Column()
-  license_plate: string;
-
   @Column({
     type: 'enum',
     enum: Role,
@@ -36,6 +33,14 @@ export class Client {
   @OneToMany(() => Invoice, (invoice) => invoice.client)
   invoices: Invoice[];
 
-  // @OneToMany(()=> Car, (car)=> car.client)
-  // cars: Car[]
+  @OneToMany(()=> Car, (car)=> car.client)
+  cars: Car[];
+
+  constructor(firstname: string, lastname: string, password: string, email: string, role?: Role) {
+    this.firstname = firstname;
+    this.lastname = lastname;
+    this.password = password;
+    this.email = email;
+    this.role = role || Role.User;
+  }
 }

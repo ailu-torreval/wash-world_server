@@ -10,6 +10,11 @@ export class Car {
     @Column()
     license_plate: string;
 
-    // @ManyToOne(() => Client, (client) => client.cars)
-    // client: Client
+    @ManyToOne(() => Client, (client) => client.cars)
+    client: Client;
+
+    constructor(license_plate: string, client: Client) {
+        this.license_plate = license_plate;
+        this.client = client;
+    }
 }
