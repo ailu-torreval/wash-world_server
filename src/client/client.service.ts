@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { ClientDto } from './dto/client.dto';
 import { Client } from './entities/client.entity';
 import { Repository } from 'typeorm';
@@ -7,19 +7,27 @@ import { CarService } from 'src/car/car.service';
 
 @Injectable()
 export class ClientService {
+  
   constructor(
     @InjectRepository(Client)
     private clientRepository: Repository<Client>,
     private carService: CarService,
   ) {}
-  async create(clientDto: ClientDto): Promise<any> {
-    const { license_plate, ...rest } = clientDto;
-    const createdUser = await this.clientRepository.create(rest);
-    const createdCar = await this.carService.create({
-      license_plate,
-      client: createdUser,
-    });
-    return this.clientRepository.save(createdUser);
+
+  async create(clientDto: ClientDto): Promise<Client> {
+    try {
+      const { license_plate, ...rest } = clientDto;
+      const createdUser = this.clientRepository.create(rest);
+      const savedUser = await this.clientRepository.save(createdUser);
+      const createdCar = await this.carService.create({
+        license_plate,
+        client: savedUser,
+      });
+
+      return { ...savedUser, cars: [createdCar] };  
+    } catch (error) {
+      throw new Error('Error creating client');
+    }
   }
 
   async findAll(): Promise<Client[]> {
@@ -27,14 +35,15 @@ export class ClientService {
       const clients = await this.clientRepository.find({ relations: ['cars'] });
       return clients;
     } catch (error) {
-      throw new Error('Error fetching clients');
+      throw new InternalServerErrorException('Error fetching clients' + error);
     }
   }
 
   async findOne(id: number): Promise<any> {
-    const selectedUser = await this.clientRepository.findOneBy({ id });
+    const selectedUser = await this.clientRepository.findOne({ where: { id }, relations: ['cars', 'invoices'] });
     if (selectedUser) {
-      return selectedUser;
+      const { password, ...cleanUser } = selectedUser;
+      return cleanUser;
     } else {
       throw new NotFoundException(`Client with id ${id} not found`);
     }
@@ -58,7 +67,7 @@ export class ClientService {
       if (updatedUser.affected === 1) {
         return this.clientRepository.findOne({
           where: { id },
-          relations: ['cars'],
+          relations: ['cars', 'invoices'],
         });
       }
     } catch (error) {

@@ -1,25 +1,61 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { VenueDto } from './dto/venue.dto';
+import { Venue } from './entities/venue.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class VenueService {
-  create(venueDto: VenueDto) {
-    return 'This action adds a new venue';
+  constructor(
+    @InjectRepository(Venue)
+    private venueRepository: Repository<Venue>,
+  ) {}
+
+  async create(venueDto: VenueDto): Promise<Venue> {
+    try {
+      const createdVenue = this.venueRepository.create(venueDto);
+      return await this.venueRepository.save(createdVenue);
+    } catch (error) {
+      throw new InternalServerErrorException(`Error creating venue: ${error}`);
+    }
   }
 
-  findAll() {
-    return `This action returns all venue`;
+  async findAll(): Promise<Venue[]> {
+    try {
+      const venues = await this.venueRepository.find();
+      return venues;
+    } catch (error) {
+      throw new InternalServerErrorException('Error fetching venues'  + error);
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} venue`;
+  async findOne(id: number): Promise<Venue> {
+    const selectedVenue = await this.venueRepository.findOneBy({ id });
+    if (selectedVenue) {
+      return selectedVenue;
+    } else {
+      throw new NotFoundException('Venue not found');
+    }
   }
 
-  update(id: number, venueDto: VenueDto) {
-    return `This action updates a #${id} venue`;
-  }
+ async update(id: number, venueDto: VenueDto): Promise<Venue>{
+    try {
+      const updatedVenue = await this.venueRepository.update(id, venueDto);
+      if (updatedVenue.affected === 1) {
+        return this.venueRepository.findOne({
+          where: { id },
+        });
+      }
+    } catch (error) {
+      throw new NotFoundException(`Venue with id ${id} not found`);
+    }  }
 
-  remove(id: number) {
-    return `This action removes a #${id} venue`;
+  async remove(id: number): Promise<any> {
+    const deletedVenue = await this.venueRepository.delete(id);
+    if (deletedVenue.affected === 1) {
+      return { id: id, status: 'deleted' };
+    } else {
+      throw new NotFoundException(`Venue with id ${id} not found`);
+    }
   }
 }

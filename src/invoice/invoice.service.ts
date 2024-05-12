@@ -1,25 +1,121 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InvoiceDto } from './dto/invoice.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Invoice } from './entities/invoice.entity';
+import { Repository } from 'typeorm';
+import { Extra } from 'src/extra/entities/extra.entity';
+import { ClientService } from 'src/client/client.service';
+import { VenueService } from 'src/venue/venue.service';
+import { ExtraService } from 'src/extra/extra.service';
 
 @Injectable()
 export class InvoiceService {
-  create(invoiceDto: InvoiceDto) {
-    return 'This action adds a new invoice';
+  constructor(
+    @InjectRepository(Invoice)
+    private invoiceRepository: Repository<Invoice>,
+    @InjectRepository(Extra)
+    private extraRepository: Repository<Extra>,
+    private clientService: ClientService,
+    private venueService: VenueService,
+  ) {}
+
+  async create(invoiceDto: InvoiceDto): Promise<Invoice> {
+    try {
+      const client = await this.clientService.findOne(invoiceDto.client_id);
+      const venue = await this.venueService.findOne(invoiceDto.venue_id);
+      const extras = await this.extraRepository.find({
+        where: invoiceDto.extras_ids.map((id) => ({ id })),
+      });
+
+      const { password, ...cleanClient} = client;
+
+      const invoice = this.invoiceRepository.create({
+        client: cleanClient,
+        venue,
+        extras,
+        date: new Date(),
+        total_amount: invoiceDto.total_amount,
+        points_earned: invoiceDto.points_earned,
+        points_redeemed: invoiceDto.points_redeemed,
+      });
+
+      return await this.invoiceRepository.save(invoice);
+    } catch (error) {
+      throw new InternalServerErrorException(`Error creating invoice, ${error}`);
+    }
   }
 
-  findAll() {
-    return `This action returns all invoice`;
+  async findAll(): Promise<Invoice[]> {
+    try {
+      const invoices = await this.invoiceRepository.find({
+        relations: ['client', 'venue', 'extras'],
+      });
+      return invoices;
+    } catch (error) {
+      throw new InternalServerErrorException(`Error fetching invoices, ${error}`);
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} invoice`;
+  async findInvoicesFromUser(id: number): Promise<Invoice[]> {
+    try {
+      const invoices = await this.invoiceRepository.find({
+        where: { client: { id } },
+        relations: ['venue', 'extras'],
+      });
+      return invoices;
+    } catch (error) {
+      throw new InternalServerErrorException(`Error fetching invoices, ${error}`);
+    }
   }
 
-  update(id: number, invoiceDto: InvoiceDto) {
-    return `This action updates a #${id} invoice`;
+  async findOne(id: number): Promise<Invoice> {
+    const selectedInvoice = await this.invoiceRepository.findOne({
+      where: { id },
+      relations: ['client', 'venue', 'extras'],
+    });
+    if (selectedInvoice) {
+      return selectedInvoice;
+    } else {
+      throw new InternalServerErrorException(`Invoice with id ${id} not found`);
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} invoice`;
+  async update(id: number, invoiceDto: InvoiceDto): Promise<Invoice> {
+    try {
+      const client = await this.clientService.findOne(invoiceDto.client_id);
+      const venue = await this.venueService.findOne(invoiceDto.venue_id);
+      const extras = await this.extraRepository.find({
+        where: invoiceDto.extras_ids.map((id) => ({ id })),
+      });
+
+      const { password, ...cleanClient} = client;
+
+      const updatedInvoice = await this.invoiceRepository.update(id, {
+        client: cleanClient,
+        venue,
+        extras,
+        total_amount: invoiceDto.total_amount,
+        points_earned: invoiceDto.points_earned,
+        points_redeemed: invoiceDto.points_redeemed,
+      });
+
+      if (updatedInvoice.affected === 1) {
+        return this.invoiceRepository.findOne({
+          where: { id },
+          relations: ['client', 'venue', 'extras'],
+        });
+      }
+    } catch (error) {
+      throw new InternalServerErrorException(`Error updating invoice, ${error}`);
+    }
+  }
+
+  async remove(id: number): Promise<any> {
+    const deletedInvoice = await this.invoiceRepository.delete(id);
+    if(deletedInvoice.affected === 1) {
+      return { id: id, status: 'deleted' };
+    } else {
+      throw new NotFoundException(`Invoice with id ${id} not found`);
+    }
   }
 }

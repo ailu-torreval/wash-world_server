@@ -28,7 +28,4 @@ export class VenueDto {
     @IsNotEmpty()
     @IsNumber()    
     lng: number;
-
-    @IsNotEmpty()
-    extras: number[];
 }

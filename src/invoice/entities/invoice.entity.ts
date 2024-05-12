@@ -1,7 +1,7 @@
 import { Extra } from "src/extra/entities/extra.entity";
 import { Venue } from "src/venue/entities/venue.entity";
 import { Client } from "src/client/entities/client.entity";
-import { Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Invoice {
@@ -9,11 +9,11 @@ export class Invoice {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @OneToOne(() => Client)
+    @ManyToOne(() => Client)
     @JoinColumn()
     client: Client;
-
-    @OneToOne(() => Venue)
+  
+    @ManyToOne(() => Venue)
     @JoinColumn()
     venue: Venue;
 
@@ -33,7 +33,7 @@ export class Invoice {
     @Column()
     points_redeemed: number;
 
-    constructor(client: Client, venue: Venue, extras: Extra[], date: Date, total_amount: number, points_earned: number, points_redeemed: number) {
+    constructor(client: Client, venue: Venue, extras: Extra[], total_amount: number, points_earned: number, points_redeemed: number, date?: Date) {
         this.client = client;
         this.venue = venue;
         this.extras = extras;

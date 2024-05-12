@@ -26,8 +26,7 @@ export class AuthService {
     return this.jwtService.sign(payload);
   }
 
-  async signup(signupDto: ClientDto): Promise<Client> {
-    try {
+  async signup(signupDto: ClientDto): Promise<Partial <Client>> {
       const salt = await bcrypt.genSalt(10);
       const hash = await bcrypt.hash(signupDto.password, salt);
   
@@ -39,8 +38,5 @@ export class AuthService {
   
       return result;
       
-    } catch(error) {
-      throw new UnauthorizedException('Invalid email or password');
-    }
   }
 }

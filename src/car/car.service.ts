@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CarDto } from './dto/car.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Car } from './entities/car.entity';
@@ -14,17 +14,17 @@ export class CarService {
 
   async create(carDto: CarDto): Promise<Car> {
     try {
-      const createdCar = await this.carRepository.create(carDto);
-      return this.carRepository.save(createdCar);
+      const createdCar = this.carRepository.create(carDto);
+      const savedCar = await this.carRepository.save(createdCar);
+      const { client, ...carData } = savedCar;
+      return { ...carData };
     } catch(error) {
-      throw new Error('Error creating car');
+      throw new InternalServerErrorException('Error creating car' + error);
     }
   }
 
   async findAll(): Promise<Car[]> {
-    const cars = await this.carRepository.find({
-      relations: ['client'],
-    });
+    const cars = await this.carRepository.find();
     return cars;
   }
 

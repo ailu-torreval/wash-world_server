@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Put,
 } from '@nestjs/common';
 import { WashTypeService } from './wash_type.service';
 import { WashTypeDto } from './dto/wash_type.dto';
@@ -29,7 +30,7 @@ export class WashTypeController {
     return this.washTypeService.findOne(+id);
   }
 
-  @Patch(':id')
+  @Put(':id')
   update(
     @Param('id') id: string,
     @Body() washTypeDto: WashTypeDto,
