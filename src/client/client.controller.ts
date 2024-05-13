@@ -5,7 +5,6 @@ import {
   Body,
   Param,
   Delete,
-  Put,
   Patch,
 } from '@nestjs/common';
 import { ClientService } from './client.service';

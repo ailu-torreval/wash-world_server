@@ -1,4 +1,8 @@
-import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InvoiceDto } from './dto/invoice.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Invoice } from './entities/invoice.entity';
@@ -6,7 +10,6 @@ import { Repository } from 'typeorm';
 import { Extra } from 'src/extra/entities/extra.entity';
 import { ClientService } from 'src/client/client.service';
 import { VenueService } from 'src/venue/venue.service';
-import { ExtraService } from 'src/extra/extra.service';
 
 @Injectable()
 export class InvoiceService {
@@ -21,12 +24,12 @@ export class InvoiceService {
 
   async create(invoiceDto: InvoiceDto): Promise<Invoice> {
     try {
-      const client = await this.clientService.checkClientBalanceAndUpdate(invoiceDto);
+      const client =
+        await this.clientService.checkClientBalanceAndUpdate(invoiceDto);
       const venue = await this.venueService.findOne(invoiceDto.venue_id);
       const extras = await this.extraRepository.find({
         where: invoiceDto.extras_ids.map((id) => ({ id })),
       });
-
 
       const invoice = this.invoiceRepository.create({
         client,
@@ -39,9 +42,10 @@ export class InvoiceService {
       });
 
       return await this.invoiceRepository.save(invoice);
-
     } catch (error) {
-      throw new InternalServerErrorException(`Error creating invoice, ${error}`);
+      throw new InternalServerErrorException(
+        `Error creating invoice, ${error}`,
+      );
     }
   }
 
@@ -52,7 +56,9 @@ export class InvoiceService {
       });
       return invoices;
     } catch (error) {
-      throw new InternalServerErrorException(`Error fetching invoices, ${error}`);
+      throw new InternalServerErrorException(
+        `Error fetching invoices, ${error}`,
+      );
     }
   }
 
@@ -76,7 +82,7 @@ export class InvoiceService {
         where: invoiceDto.extras_ids.map((id) => ({ id })),
       });
 
-      const { password, ...cleanClient} = client;
+      const { password, ...cleanClient } = client;
 
       const updatedInvoice = await this.invoiceRepository.update(id, {
         client: cleanClient,
@@ -94,13 +100,15 @@ export class InvoiceService {
         });
       }
     } catch (error) {
-      throw new InternalServerErrorException(`Error updating invoice, ${error}`);
+      throw new InternalServerErrorException(
+        `Error updating invoice, ${error}`,
+      );
     }
   }
 
   async remove(id: number): Promise<any> {
     const deletedInvoice = await this.invoiceRepository.delete(id);
-    if(deletedInvoice.affected === 1) {
+    if (deletedInvoice.affected === 1) {
       return { id: id, status: 'deleted' };
     } else {
       throw new NotFoundException(`Invoice with id ${id} not found`);
