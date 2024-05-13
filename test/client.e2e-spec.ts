@@ -1,17 +1,22 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
 import { Connection, Repository } from 'typeorm';
-import { getRepositoryToken } from '@nestjs/typeorm';
-import { AppModule } from '@app/app.module';
+import { TypeOrmModule, getRepositoryToken } from '@nestjs/typeorm';
 import { Client } from '@client/entities/client.entity';
 import { ClientService } from '@client/client.service';
 import { AuthService } from '@auth/auth.service';
+import { testConfig } from '../ormconfig.test';
+import { ClientModule } from '@app/client/client.module';
+import { AuthModule } from '@app/auth/auth.module';
+import { Car } from '@car/entities/car.entity';
+import { CarModule } from '@car/car.module';
 
 describe('clientController (e2e)', () => {
   let app: INestApplication;
   let moduleFixture: TestingModule;
   let clientRepository: Repository<Client>
+  let carRepository: Repository<Car>
   let clientService: ClientService;
   let authService: AuthService
   let connection: Connection
@@ -20,36 +25,34 @@ describe('clientController (e2e)', () => {
 
     // prepare the module
 
-     moduleFixture = await Test.createTestingModule({
-      imports: [AppModule],
+    moduleFixture = await Test.createTestingModule({
+      imports: [
+        TypeOrmModule.forRoot(testConfig),
+        ClientModule,
+        CarModule,
+        AuthModule
+      ],
     }).compile();
 
     clientService = moduleFixture.get(ClientService);
     authService = moduleFixture.get(AuthService);
     clientRepository = moduleFixture.get(getRepositoryToken(Client));
+    // await clientRepository.query("DELETE FROM client")
 
     connection = moduleFixture.get(Connection)
     app = moduleFixture.createNestApplication();
     await app.init();
-
-    try {
-      // Try to perform a simple query
-      const result = await clientRepository.find();
-      console.log('Database connection successful. Number of clients:', result.length);
-    } catch (error) {
-      console.error('Failed to connect to the database:', error);
-    }
 
   });
 
   describe('Signup', () => {
     it('should create a client', async () => {
       const testUser = {
-        "firstname": "test",
+        "firstname": "testy",
         "lastname": "testinson",
-        "email": "test@mail.com",
+        "email": "test1@mail.com",
         "password": "qwerty",
-        "license_plate": "abc123"
+        "license_plate": "test123"
     };
         // Act
       const {body} = await request(app.getHttpServer())
@@ -59,16 +62,17 @@ describe('clientController (e2e)', () => {
 
 
       // Assert
-      // expect(body.password).toMatch(/^\$2[aby]\$.{56}$/); // test if pass is hashed
-      expect(body.email).toEqual("test@mail.com");
+      expect(body.email).toEqual("test1@mail.com");
       expect(body.role).toEqual("user");
       expect(body.id).toBeDefined();
     });
 })
 
 
-afterAll(() => {
+afterAll(async () => {
   if (app) {
+    // await carRepository.delete({ license_plate: "test123" });
+    // await clientRepository.delete({ email: "test1@mail.com" });
     app.close();
   }
 });
