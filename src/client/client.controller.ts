@@ -7,9 +7,9 @@ import {
   Delete,
   Patch,
 } from '@nestjs/common';
-import { ClientService } from './client.service';
-import { ClientDto } from './dto/client.dto';
-import { UpdateClientDto } from './dto/updateClient.dto';
+import { ClientService } from '@client/client.service';
+import { ClientDto } from '@client/dto/client.dto';
+import { UpdateClientDto } from '@client/dto/updateClient.dto';
 
 @Controller('client')
 export class ClientController {

@@ -7,8 +7,8 @@ import {
   Delete,
   Put,
 } from '@nestjs/common';
-import { VenueService } from './venue.service';
-import { VenueDto } from './dto/venue.dto';
+import { VenueService } from '@venue/venue.service';
+import { VenueDto } from '@venue/dto/venue.dto';
 
 @Controller('venue')
 export class VenueController {

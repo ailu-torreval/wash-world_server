@@ -1,4 +1,3 @@
-import { Invoice } from "src/invoice/entities/invoice.entity";
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()

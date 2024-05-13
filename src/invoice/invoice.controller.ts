@@ -7,8 +7,8 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
-import { InvoiceService } from './invoice.service';
-import { InvoiceDto } from './dto/invoice.dto';
+import { InvoiceService } from '@invoice/invoice.service';
+import { InvoiceDto } from '@invoice/dto/invoice.dto';
 
 @Controller('invoice')
 export class InvoiceController {

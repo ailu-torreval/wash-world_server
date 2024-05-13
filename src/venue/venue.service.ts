@@ -1,6 +1,6 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { VenueDto } from './dto/venue.dto';
-import { Venue } from './entities/venue.entity';
+import { VenueDto } from '@venue/dto/venue.dto';
+import { Venue } from '@venue/entities/venue.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 

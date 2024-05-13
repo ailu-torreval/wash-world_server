@@ -1,7 +1,7 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { WashTypeDto } from './dto/wash_type.dto';
+import { WashTypeDto } from '@wash_type/dto/wash_type.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { WashType } from './entities/wash_type.entity';
+import { WashType } from '@wash_type/entities/wash_type.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()

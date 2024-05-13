@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
-import { InvoiceService } from './invoice.service';
-import { InvoiceController } from './invoice.controller';
+import { InvoiceService } from '@invoice/invoice.service';
+import { InvoiceController } from '@invoice/invoice.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Invoice } from './entities/invoice.entity';
-import { Extra } from 'src/extra/entities/extra.entity';
-import { ClientModule } from 'src/client/client.module';
-import { VenueModule } from 'src/venue/venue.module';
+import { Invoice } from '@invoice/entities/invoice.entity';
+import { Extra } from '@extra/entities/extra.entity';
+import { ClientModule } from '@client/client.module';
+import { VenueModule } from '@venue/venue.module';
 
 @Module({
   imports: [

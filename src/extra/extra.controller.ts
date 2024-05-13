@@ -7,8 +7,8 @@ import {
   Delete,
   Put,
 } from '@nestjs/common';
-import { ExtraService } from './extra.service';
-import { ExtraDto } from './dto/extra.dto';
+import { ExtraService } from '@extra/extra.service';
+import { ExtraDto } from '@extra/dto/extra.dto';
 
 @Controller('extra')
 export class ExtraController {

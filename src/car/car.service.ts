@@ -1,7 +1,7 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { CarDto } from './dto/car.dto';
+import { CarDto } from '@car/dto/car.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Car } from './entities/car.entity';
+import { Car } from '@car/entities/car.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()

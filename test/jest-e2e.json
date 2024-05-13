@@ -1,9 +1,19 @@
 {
   "moduleFileExtensions": ["js", "json", "ts"],
-  "rootDir": ".",
+  "rootDir": "..",
   "testEnvironment": "node",
   "testRegex": ".e2e-spec.ts$",
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
+  },
+  "moduleNameMapper": {
+    "^@app/(.*)$": "<rootDir>/src/$1",
+    "^@auth/(.*)$": "<rootDir>/src/auth/$1",
+    "^@car/(.*)$": "<rootDir>/src/car/$1",
+    "^@client/(.*)$": "<rootDir>/src/client/$1",
+    "^@extra/(.*)$": "<rootDir>/src/extra/$1",
+    "^@invoice/(.*)$": "<rootDir>/src/invoice/$1",
+    "^@venue/(.*)$": "<rootDir>/src/venue/$1",
+    "^@wash_type/(.*)$": "<rootDir>/src/wash_type/$1"
   }
 }

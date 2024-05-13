@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { ClientService } from './client.service';
-import { ClientController } from './client.controller';
+import { ClientService } from '@client/client.service';
+import { ClientController } from '@client/client.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Client } from './entities/client.entity';
-import { CarModule } from 'src/car/car.module';
+import { Client } from '@client/entities/client.entity';
+import { CarModule } from '@car/car.module';
 
 @Module({
   // forwardRef is used to avoid circular dependencies

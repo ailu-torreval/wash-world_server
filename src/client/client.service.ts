@@ -3,14 +3,14 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { ClientDto } from './dto/client.dto';
-import { Client } from './entities/client.entity';
+import { ClientDto } from '@client/dto/client.dto';
+import { Client } from '@client/entities/client.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CarService } from 'src/car/car.service';
-import { Invoice } from 'src/invoice/entities/invoice.entity';
-import { UpdateClientDto } from './dto/updateClient.dto';
-import { InvoiceDto } from 'src/invoice/dto/invoice.dto';
+import { CarService } from '@car/car.service';
+import { Invoice } from '@invoice/entities/invoice.entity';
+import { UpdateClientDto } from '@client/dto/updateClient.dto';
+import { InvoiceDto } from '@invoice/dto/invoice.dto';
 
 @Injectable()
 export class ClientService {

@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { WashTypeService } from './wash_type.service';
-import { WashTypeController } from './wash_type.controller';
-import { WashType } from './entities/wash_type.entity';
+import { WashTypeService } from '@wash_type/wash_type.service';
+import { WashTypeController } from '@wash_type/wash_type.controller';
+import { WashType } from '@wash_type/entities/wash_type.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({

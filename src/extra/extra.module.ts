@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { ExtraService } from './extra.service';
-import { ExtraController } from './extra.controller';
+import { ExtraService } from '@extra/extra.service';
+import { ExtraController } from '@extra/extra.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Extra } from './entities/extra.entity';
+import { Extra } from '@extra/entities/extra.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Extra])],  

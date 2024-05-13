@@ -1,9 +1,9 @@
 import { Controller, Get, Post, Body, Request, Patch, Param, Delete, HttpCode, HttpStatus, UseGuards } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { LoginUserDto } from './dto/loginUser.dto';
-import { AuthGuard } from './auth.guard';
-import { ClientDto } from 'src/client/dto/client.dto';
-import { Client } from 'src/client/entities/client.entity';
+import { AuthService } from '@auth/auth.service';
+import { LoginUserDto } from '@auth/dto/loginUser.dto';
+import { AuthGuard } from '@auth/auth.guard';
+import { ClientDto } from '@client/dto/client.dto';
+import { Client } from '@client/entities/client.entity';
 
 @Controller('auth')
 export class AuthController {

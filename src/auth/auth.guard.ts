@@ -7,7 +7,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import * as dotenv from 'dotenv';
-import { ClientService } from 'src/client/client.service';
+import { ClientService } from '@client/client.service';
 dotenv.config();
 
 @Injectable()

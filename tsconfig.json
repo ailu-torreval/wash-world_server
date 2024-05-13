@@ -9,6 +9,7 @@
     "target": "ES2021",
     "sourceMap": true,
     "outDir": "./dist",
+    "allowJs": true,
     "baseUrl": "./",
     "incremental": true,
     "skipLibCheck": true,
@@ -16,6 +17,16 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "@app/*": ["src/*"],
+      "@auth/*": ["src/auth/*"],
+      "@car/*": ["src/car/*"],
+      "@client/*": ["src/client/*"],
+      "@extra/*": ["src/extra/*"],
+      "@invoice/*": ["src/invoice/*"],
+      "@venue/*": ["src/venue/*"],
+      "@wash_type/*": ["src/wash_type/*"]
+    }
   }
 }

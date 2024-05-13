@@ -1,6 +1,6 @@
-import { Extra } from "src/extra/entities/extra.entity";
-import { Venue } from "src/venue/entities/venue.entity";
-import { Client } from "src/client/entities/client.entity";
+import { Extra } from "@extra/entities/extra.entity";
+import { Venue } from "@venue/entities/venue.entity";
+import { Client } from "@client/entities/client.entity";
 import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()

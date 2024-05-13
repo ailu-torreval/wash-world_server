@@ -7,8 +7,8 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
-import { CarService } from './car.service';
-import { CarDto } from './dto/car.dto';
+import { CarService } from '@car/car.service';
+import { CarDto } from '@car/dto/car.dto';
 
 @Controller('car')
 export class CarController {

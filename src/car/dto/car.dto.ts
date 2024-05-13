@@ -1,5 +1,5 @@
 import { IsNotEmpty, IsNumber, IsObject, IsString } from 'class-validator';
-import { Client } from 'src/client/entities/client.entity';
+import { Client } from '@client/entities/client.entity';
 
 export class CarDto {
   @IsNotEmpty()

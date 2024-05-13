@@ -7,8 +7,8 @@ import {
   Delete,
   Put,
 } from '@nestjs/common';
-import { WashTypeService } from './wash_type.service';
-import { WashTypeDto } from './dto/wash_type.dto';
+import { WashTypeService } from '@wash_type/wash_type.service';
+import { WashTypeDto } from '@wash_type/dto/wash_type.dto';
 
 @Controller('wash-type')
 export class WashTypeController {

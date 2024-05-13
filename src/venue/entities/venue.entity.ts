@@ -1,5 +1,5 @@
-import { Invoice } from "src/invoice/entities/invoice.entity";
-import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Invoice } from "@invoice/entities/invoice.entity";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Venue {

@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { Role } from './role';
-import { Invoice } from 'src/invoice/entities/invoice.entity';
-import { Car } from 'src/car/entities/car.entity';
+import { Invoice } from '@invoice/entities/invoice.entity';
+import { Car } from '@car/entities/car.entity';
 
 @Entity()
 export class Client {

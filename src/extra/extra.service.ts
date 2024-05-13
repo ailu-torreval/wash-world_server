@@ -1,7 +1,7 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { ExtraDto } from './dto/extra.dto';
+import { ExtraDto } from '@extra/dto/extra.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Extra } from './entities/extra.entity';
+import { Extra } from '@extra/entities/extra.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
