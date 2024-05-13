@@ -1,6 +1,9 @@
 import { IsNotEmpty, IsNumber, IsString } from "class-validator";
 
-export class ClientDto {
+export class UpdateClientDto {
+
+    @IsNumber()
+    id:number;
     
     @IsNotEmpty()
     @IsString()
@@ -13,13 +16,9 @@ export class ClientDto {
     @IsNotEmpty()
     @IsString()
     lastname: string;
-  
+
     @IsNotEmpty()
-    @IsString()
-    password: string;
-    
-    @IsNotEmpty()
-    @IsString()
-    license_plate: string;
+    @IsNumber()
+    reward_points_balance: number;
   
 }

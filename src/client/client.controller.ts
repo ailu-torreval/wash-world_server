@@ -6,16 +6,15 @@ import {
   Param,
   Delete,
   Put,
+  Patch,
 } from '@nestjs/common';
 import { ClientService } from './client.service';
 import { ClientDto } from './dto/client.dto';
-import { Invoice } from 'src/invoice/entities/invoice.entity';
-import { InvoiceService } from 'src/invoice/invoice.service';
+import { UpdateClientDto } from './dto/updateClient.dto';
 
 @Controller('client')
 export class ClientController {
   constructor(private clientService: ClientService,
-    private invoiceService: InvoiceService
   ) {}
 
   @Post()
@@ -35,12 +34,13 @@ export class ClientController {
 
   @Get(':id/invoices')
   findInvoices(@Param('id') id: string) {
-    return this.invoiceService.findInvoicesFromUser(+id);
+    // return this.invoiceService.findInvoicesFromUser(+id);
+    return this.clientService.findClientInvoices(+id);
   }
 
-  @Put(':id')
-  update(@Param('id') id: string, @Body() clientDto: ClientDto) {
-    return this.clientService.update(+id, clientDto);
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateclientDto: UpdateClientDto) {
+    return this.clientService.update(+id, updateclientDto);
   }
 
   @Delete(':id')

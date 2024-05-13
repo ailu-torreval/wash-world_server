@@ -1,13 +1,19 @@
-import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { ClientDto } from './dto/client.dto';
 import { Client } from './entities/client.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CarService } from 'src/car/car.service';
+import { Invoice } from 'src/invoice/entities/invoice.entity';
+import { UpdateClientDto } from './dto/updateClient.dto';
+import { InvoiceDto } from 'src/invoice/dto/invoice.dto';
 
 @Injectable()
 export class ClientService {
-  
   constructor(
     @InjectRepository(Client)
     private clientRepository: Repository<Client>,
@@ -24,7 +30,7 @@ export class ClientService {
         client: savedUser,
       });
 
-      return { ...savedUser, cars: [createdCar] };  
+      return { ...savedUser, cars: [createdCar] };
     } catch (error) {
       throw new Error('Error creating client');
     }
@@ -39,8 +45,11 @@ export class ClientService {
     }
   }
 
-  async findOne(id: number): Promise<any> {
-    const selectedUser = await this.clientRepository.findOne({ where: { id }, relations: ['cars', 'invoices'] });
+  async findOne(id: number): Promise<Partial<Client>> {
+    const selectedUser = await this.clientRepository.findOne({
+      where: { id },
+      relations: ['cars', 'invoices'],
+    });
     if (selectedUser) {
       const { password, ...cleanUser } = selectedUser;
       return cleanUser;
@@ -60,10 +69,21 @@ export class ClientService {
     }
   }
 
-  async update(id: number, clientDto: ClientDto): Promise<Client> {
+  async findClientInvoices(id: number): Promise<Invoice[]> {
+    const selectedUser = await this.clientRepository.findOne({
+      where: { id },
+      relations: ['invoices', 'invoices.venue', 'invoices.extras'],
+    });
+    if (selectedUser) {
+      return selectedUser.invoices;
+    } else {
+      throw new NotFoundException(`Client with id ${id} not found`);
+    }
+  }
+
+  async update(id: number, clientDto: UpdateClientDto): Promise<Client> {
     try {
-      const { license_plate, ...rest } = clientDto;
-      const updatedUser = await this.clientRepository.update(id, rest);
+      const updatedUser = await this.clientRepository.update(id, clientDto);
       if (updatedUser.affected === 1) {
         return this.clientRepository.findOne({
           where: { id },
@@ -72,6 +92,46 @@ export class ClientService {
       }
     } catch (error) {
       throw new NotFoundException(`Client with id ${id} not found`);
+    }
+  }
+
+  async checkClientBalanceAndUpdate(
+    invoice: InvoiceDto,
+  ): Promise<Partial<Client>> {
+    try {
+      const client = await this.clientRepository.findOne({
+        where: { id: invoice.client_id },
+        relations: ['cars', 'invoices'],
+      });
+      
+      if (!client) {
+        throw new NotFoundException(`Client with id ${invoice.client_id} not found`);
+      }
+
+      if (invoice.points_redeemed > 0 || invoice.points_earned > 0) {
+        if (
+          client.reward_points_balance !== null &&
+          client.reward_points_balance >= invoice.points_redeemed
+        ) {
+          client.reward_points_balance =
+            client.reward_points_balance -
+            invoice.points_redeemed +
+            invoice.points_earned;
+          const updatedClient = await this.clientRepository.save(client);
+          const { password, ...cleanClient } = updatedClient;
+          return cleanClient;
+        } else {
+          throw new InternalServerErrorException(
+            `Client with id ${invoice.client_id} does not have enough points to redeem`,
+          );
+        }
+      } else {
+        const { password, ...cleanClient } = client;
+
+        return cleanClient;
+      }
+    } catch (error) {
+      throw new InternalServerErrorException(error);
     }
   }
 

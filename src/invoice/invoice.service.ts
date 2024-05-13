@@ -21,16 +21,15 @@ export class InvoiceService {
 
   async create(invoiceDto: InvoiceDto): Promise<Invoice> {
     try {
-      const client = await this.clientService.findOne(invoiceDto.client_id);
+      const client = await this.clientService.checkClientBalanceAndUpdate(invoiceDto);
       const venue = await this.venueService.findOne(invoiceDto.venue_id);
       const extras = await this.extraRepository.find({
         where: invoiceDto.extras_ids.map((id) => ({ id })),
       });
 
-      const { password, ...cleanClient} = client;
 
       const invoice = this.invoiceRepository.create({
-        client: cleanClient,
+        client,
         venue,
         extras,
         date: new Date(),
@@ -40,6 +39,7 @@ export class InvoiceService {
       });
 
       return await this.invoiceRepository.save(invoice);
+
     } catch (error) {
       throw new InternalServerErrorException(`Error creating invoice, ${error}`);
     }
@@ -56,18 +56,6 @@ export class InvoiceService {
     }
   }
 
-  async findInvoicesFromUser(id: number): Promise<Invoice[]> {
-    try {
-      const invoices = await this.invoiceRepository.find({
-        where: { client: { id } },
-        relations: ['venue', 'extras'],
-      });
-      return invoices;
-    } catch (error) {
-      throw new InternalServerErrorException(`Error fetching invoices, ${error}`);
-    }
-  }
-
   async findOne(id: number): Promise<Invoice> {
     const selectedInvoice = await this.invoiceRepository.findOne({
       where: { id },
@@ -76,7 +64,7 @@ export class InvoiceService {
     if (selectedInvoice) {
       return selectedInvoice;
     } else {
-      throw new InternalServerErrorException(`Invoice with id ${id} not found`);
+      throw new NotFoundException(`Invoice with id ${id} not found`);
     }
   }
 
