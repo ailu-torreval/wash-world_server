@@ -136,11 +136,16 @@ export class ClientService {
   }
 
   async remove(id: number) {
-    const deletedClient = await this.clientRepository.delete(id);
-    if (deletedClient.affected === 1) {
-      return { id: id, status: 'deleted' };
-    } else {
-      throw new NotFoundException(`Client with id ${id} not found`);
+    try {
+      await this.carService.deleteClientCars(id);
+      const deletedClient = await this.clientRepository.delete(id);
+      if (deletedClient.affected === 1) {
+        return { id: id, status: 'deleted' };
+      } else {
+        throw new NotFoundException(`Client with id ${id} not found`);
+      }
+    } catch(error) {
+      throw new InternalServerErrorException(error);
     }
   }
 }

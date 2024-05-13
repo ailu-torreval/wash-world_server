@@ -36,8 +36,8 @@ describe('clientController (e2e)', () => {
 
     clientService = moduleFixture.get(ClientService);
     authService = moduleFixture.get(AuthService);
+    carRepository = moduleFixture.get(getRepositoryToken(Car));
     clientRepository = moduleFixture.get(getRepositoryToken(Client));
-    // await clientRepository.query("DELETE FROM client")
 
     connection = moduleFixture.get(Connection)
     app = moduleFixture.createNestApplication();
@@ -50,7 +50,7 @@ describe('clientController (e2e)', () => {
       const testUser = {
         "firstname": "testy",
         "lastname": "testinson",
-        "email": "test1@mail.com",
+        "email": "test@mail.com",
         "password": "qwerty",
         "license_plate": "test123"
     };
@@ -62,7 +62,7 @@ describe('clientController (e2e)', () => {
 
 
       // Assert
-      expect(body.email).toEqual("test1@mail.com");
+      expect(body.email).toEqual("test2@mail.com");
       expect(body.role).toEqual("user");
       expect(body.id).toBeDefined();
     });
@@ -71,8 +71,8 @@ describe('clientController (e2e)', () => {
 
 afterAll(async () => {
   if (app) {
-    // await carRepository.delete({ license_plate: "test123" });
-    // await clientRepository.delete({ email: "test1@mail.com" });
+    await carRepository.delete({ license_plate: "test123" });
+    await clientRepository.delete({ email: "test@mail.com" });
     app.close();
   }
 });

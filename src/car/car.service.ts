@@ -54,6 +54,15 @@ export class CarService {
     }
   }
 
+  async deleteClientCars(clientId: number): Promise<any> {
+    try {
+      const deletedCars = await this.carRepository.delete({ client: { id: clientId } });
+      return { deletedCars: deletedCars.affected };
+    }catch(error) {
+      throw new InternalServerErrorException(error);
+    }
+  }
+
   async remove(id: number): Promise<any>{
     const deletedCar = await this.carRepository.delete(id);
     if (deletedCar.affected === 1) {
