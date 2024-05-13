@@ -5,6 +5,16 @@
   "author": "",
   "private": true,
   "license": "UNLICENSED",
+  "_moduleAliases": {
+    "@app": "src",
+    "@auth": "src/auth",
+    "@car": "src/car",
+    "@client": "src/client",
+    "@extra": "src/extra",
+    "@invoice": "src/invoice",
+    "@venue": "src/venue",
+    "@wash_type": "src/wash_type"
+  },
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
@@ -36,6 +46,7 @@
     "bcrypt": "^5.1.1",
     "class-validator": "^0.14.1",
     "dotenv": "^16.4.5",
+    "module-alias": "^2.2.3",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",

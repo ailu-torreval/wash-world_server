@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
-import { dbConfig } from 'data.source';
+import { dbConfig } from '../data.source';
 import { ClientModule } from './client/client.module';
 import { ExtraModule } from './extra/extra.module';
 import { InvoiceModule } from './invoice/invoice.module';
