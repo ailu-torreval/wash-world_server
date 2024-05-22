@@ -11,7 +11,7 @@ export class ExtraDto {
 
   @IsNotEmpty()
   @IsString()
-  description: string;
+  icon: string;
 
   @IsNotEmpty()
   @IsNumber()

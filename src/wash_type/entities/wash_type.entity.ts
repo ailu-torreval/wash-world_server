@@ -12,6 +12,9 @@ export class WashType {
   description: string;
 
   @Column()
+  icon: string;
+
+  @Column()
   price: number;
 
   @Column()
@@ -22,10 +25,12 @@ export class WashType {
     description: string,
     price: number,
     points_reward: number,
+    icon: string
   ) {
     this.name = name;
     this.description = description;
     this.price = price;
     this.points_reward = points_reward;
+    this.icon = icon;
   }
 }

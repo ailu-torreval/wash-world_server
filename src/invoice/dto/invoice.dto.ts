@@ -15,6 +15,9 @@ export class InvoiceDto {
 
     @IsNotEmpty()
     @IsNumber()
+    washType_id: number;
+
+    @IsNumber()
     extras_ids: number[];
 
     @IsNotEmpty()

@@ -10,7 +10,7 @@ export class Extra {
     name: string;
 
     @Column()
-    description: string;
+    icon: string;
 
     @Column()
     price: number;
@@ -18,9 +18,9 @@ export class Extra {
     @Column()
     points_price: number;
 
-    constructor(name: string, description: string, price: number, points_price: number) {
+    constructor(name: string, icon: string, price: number, points_price: number) {
         this.name = name;
-        this.description = description;
+        this.icon = icon;
         this.price = price;
         this.points_price = points_price;
     }

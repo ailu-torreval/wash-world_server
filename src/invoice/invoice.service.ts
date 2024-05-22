@@ -26,6 +26,8 @@ export class InvoiceService {
     try {
       const client =
         await this.clientService.checkClientBalanceAndUpdate(invoiceDto);
+
+
       const venue = await this.venueService.findOne(invoiceDto.venue_id);
       const extras = await this.extraRepository.find({
         where: invoiceDto.extras_ids.map((id) => ({ id })),

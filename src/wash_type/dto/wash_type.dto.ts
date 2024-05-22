@@ -14,6 +14,10 @@ export class WashTypeDto {
     description: string;
 
     @IsNotEmpty()
+    @IsString()
+    icon: string;
+
+    @IsNotEmpty()
     @IsNumber()
     price: number;
 
