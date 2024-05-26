@@ -1,4 +1,5 @@
 import { IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { Role } from "../entities/role";
 
 export class ClientDto {
     
@@ -21,5 +22,8 @@ export class ClientDto {
     @IsNotEmpty()
     @IsString()
     license_plate: string;
+    
+    @IsString()
+    role: Role;
   
 }

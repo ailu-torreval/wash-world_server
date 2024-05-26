@@ -1,3 +1,4 @@
+import { Role } from "@app/client/entities/role";
 import { IsNotEmpty, IsString } from "class-validator";
 
 export class LoginUserDto {

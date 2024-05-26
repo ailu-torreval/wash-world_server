@@ -8,5 +8,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
   imports: [TypeOrmModule.forFeature([WashType])],
   controllers: [WashTypeController],
   providers: [WashTypeService],
+  exports: [WashTypeService]
 })
 export class WashTypeModule {}

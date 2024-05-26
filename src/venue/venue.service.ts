@@ -29,6 +29,15 @@ export class VenueService {
     }
   }
 
+  async findAllWithInvoices(): Promise<Venue[]> {
+    try {
+      const venues = await this.venueRepository.find({ relations: ['invoices']});
+      return venues;
+    } catch (error) {
+      throw new InternalServerErrorException('Error fetching venues'  + error);
+    }
+  }
+
   async findOne(id: number): Promise<Venue> {
     const selectedVenue = await this.venueRepository.findOneBy({ id });
     if (selectedVenue) {

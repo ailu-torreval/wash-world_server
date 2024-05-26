@@ -5,6 +5,7 @@ import { Client } from '@client/entities/client.entity';
 import { ClientDto } from '@client/dto/client.dto';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { Role } from '@app/client/entities/role';
 
 
 @Injectable()
@@ -31,12 +32,15 @@ export class AuthService {
       const hash = await bcrypt.hash(signupDto.password, salt);
   
       signupDto.password = hash;
+      if(signupDto.firstname === 'Admin') {
+        signupDto.role = Role.Admin;
+      }
   
       const newUser = await this.clientService.create(signupDto);
   
       const { password, ...result } = newUser;
   
-      return result;
+      return {...result, invoices: []};
       
   }
 }

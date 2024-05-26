@@ -48,7 +48,15 @@ export class ClientService {
   async findOne(id: number): Promise<Partial<Client>> {
     const selectedUser = await this.clientRepository.findOne({
       where: { id },
-      relations: ['cars', 'invoices'],
+      relations: ['cars'],
+      join: {
+        alias: 'client',
+        leftJoinAndSelect: {
+          invoices: 'client.invoices',
+          invoiceExtras: 'invoices.extras',
+          invoiceWashType: 'invoices.washType',
+          invoiceVenue: 'invoices.venue',
+        }}
     });
     if (selectedUser) {
       const { password, ...cleanUser } = selectedUser;
@@ -72,7 +80,7 @@ export class ClientService {
   async findClientInvoices(id: number): Promise<Invoice[]> {
     const selectedUser = await this.clientRepository.findOne({
       where: { id },
-      relations: ['invoices', 'invoices.venue', 'invoices.extras'],
+      relations: ['invoices', 'invoices.venue', 'invoices.extras', 'invoices.washType'],
     });
     if (selectedUser) {
       return selectedUser.invoices;
@@ -99,10 +107,19 @@ export class ClientService {
     invoice: InvoiceDto,
   ): Promise<Partial<Client>> {
     try {
-      const client = await this.clientRepository.findOne({
-        where: { id: invoice.client_id },
-        relations: ['cars', 'invoices'],
-      });
+const client = await this.clientRepository.findOne({
+  where: { id: invoice.client_id },
+  relations: ['cars'],
+  join: {
+    alias: 'client',
+    leftJoinAndSelect: {
+      invoices: 'client.invoices',
+      invoiceExtras: 'invoices.extras',
+      invoiceWashType: 'invoices.washType',
+      invoiceVenue: 'invoices.venue',
+    },
+  },
+});
       
       if (!client) {
         throw new NotFoundException(`Client with id ${invoice.client_id} not found`);
