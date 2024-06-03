@@ -5,7 +5,6 @@ export class MockClientService extends ClientService {
   async create(): Promise<Client> {
     const client = new Client("mock","client", "password", "mock@mail.com");
     client.id = 1;
-    console.log("client from mock", client)
     return {...client};
   }
 }
