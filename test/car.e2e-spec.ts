@@ -55,19 +55,16 @@ describe('CarService (e2e)', () => {
         client: mockClient,
       };
       console.log(carDto);
-
+ 
       const response = await request(app.getHttpServer())
         .post('/car')
         .send(carDto);
 
-      if (response.status !== 201) {
-        console.error(response.body);
-      }
-
-      expect(response.status).toEqual(201);
-    //   expect(response.license_plate).toEqual('test123');
-    //   expect(response.client).toEqual(mockClient);
-    //   console.log(mockClient);
+        if (response.status !== 201) {
+          console.error(response.body);
+        }
+        
+        expect(response.status).toEqual(201);
     });
   });
 
