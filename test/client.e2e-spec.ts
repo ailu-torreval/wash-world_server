@@ -62,9 +62,11 @@ describe('clientController (e2e)', () => {
 
 
       // Assert
-      expect(body.email).toEqual("test2@mail.com");
+      expect(body.email).toEqual("test@mail.com");
       expect(body.role).toEqual("user");
       expect(body.id).toBeDefined();
+      expect(body.cars[0].id).toBeDefined();
+      console.log(body)
     });
 })
 
