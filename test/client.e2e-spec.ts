@@ -15,14 +15,13 @@ import { CarModule } from '@car/car.module';
 describe('clientController (e2e)', () => {
   let app: INestApplication;
   let moduleFixture: TestingModule;
-  let clientRepository: Repository<Client>
-  let carRepository: Repository<Car>
+  let clientRepository: Repository<Client>;
+  let carRepository: Repository<Car>;
   let clientService: ClientService;
-  let authService: AuthService
-  let connection: Connection
+  let authService: AuthService;
+  let connection: Connection;
 
   beforeEach(async () => {
-
     // prepare the module
 
     moduleFixture = await Test.createTestingModule({
@@ -30,7 +29,7 @@ describe('clientController (e2e)', () => {
         TypeOrmModule.forRoot(testConfig),
         ClientModule,
         CarModule,
-        AuthModule
+        AuthModule,
       ],
     }).compile();
 
@@ -39,41 +38,38 @@ describe('clientController (e2e)', () => {
     carRepository = moduleFixture.get(getRepositoryToken(Car));
     clientRepository = moduleFixture.get(getRepositoryToken(Client));
 
-    connection = moduleFixture.get(Connection)
+    connection = moduleFixture.get(Connection);
     app = moduleFixture.createNestApplication();
     await app.init();
-
   });
 
   describe('Signup', () => {
-    it('should create a client', async () => {
+    it('should create a client and a car', async () => {
       const testUser = {
-        "firstname": "testy",
-        "lastname": "testinson",
-        "email": "test@mail.com",
-        "password": "qwerty",
-        "license_plate": "test123"
-    };
-        // Act
-      const {body} = await request(app.getHttpServer())
-                        .post('/auth/signup')
-                        .send(testUser)
-                        .expect(201)
-
+        firstname: 'testy',
+        lastname: 'testinson',
+        email: 'test@mail.com',
+        password: 'qwerty',
+        license_plate: 'test123',
+      };
+      // Act
+      const { body } = await request(app.getHttpServer())
+        .post('/auth/signup')
+        .send(testUser)
+        .expect(201);
 
       // Assert
-      expect(body.email).toEqual("test2@mail.com");
-      expect(body.role).toEqual("user");
+      expect(body.email).toEqual('test@mail.com');
+      expect(body.role).toEqual('user');
       expect(body.id).toBeDefined();
     });
-})
+  });
 
-
-afterAll(async () => {
-  if (app) {
-    await carRepository.delete({ license_plate: "test123" });
-    await clientRepository.delete({ email: "test@mail.com" });
-    app.close();
-  }
-});
+  afterAll(async () => {
+    if (app) {
+      await carRepository.delete({ license_plate: 'test123' });
+      await clientRepository.delete({ email: 'test@mail.com' });
+      app.close();
+    }
+  });
 });
