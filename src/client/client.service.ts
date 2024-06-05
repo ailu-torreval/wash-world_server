@@ -23,7 +23,8 @@ export class ClientService {
   async create(clientDto: ClientDto): Promise<Client> {
     try {
       const { license_plate, ...rest } = clientDto;
-      const createdUser = this.clientRepository.create(rest);
+      const newUser = { ...rest, reward_points_balance: 50 };
+      const createdUser = this.clientRepository.create(newUser);
       const savedUser = await this.clientRepository.save(createdUser);
       const createdCar = await this.carService.create({
         license_plate,
